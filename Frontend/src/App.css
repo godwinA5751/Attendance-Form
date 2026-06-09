@@ -4,6 +4,7 @@ body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 /* CENTER USER PAGE */
@@ -19,10 +20,10 @@ body {
 .adminPage {
   width: 100%;
   min-height: 100vh;
-  padding: 40px 20px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  padding-top: 5%;
 }
 
 /* CARD BASE */
@@ -35,6 +36,7 @@ body {
 }
 .card,
 .tableCard {
+  width: 70%;
   background: white;
   padding: 22px;
   border-radius: 12px;
@@ -51,14 +53,16 @@ input {
   width: 100%;
   margin: 8px 0;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 8px 3px 3px 8px;
   border: 1px solid #ddd;
+  border-right: none;
   outline: none;
   transition: 0.2s;
 }
 
 input:focus {
-  border-color: #4f46e5;
+  box-shadow: 0 4px 10px #a6b8e5;
+  border-color: #a6b8e5;
 }
 
 .buttons{
@@ -123,7 +127,48 @@ button:hover {
 .logoutBtn:hover {
   background: #b91c1c;
 }
+.bounce {
+  animation: bounce 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
 
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.4);
+  }
+  60% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.slide {
+  animation: slide 0.6s ease-out;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(20px);
+  }
+}
+.rotate {
+  animation: rotate 0.6s linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 /* MESSAGE */
 .msg {
   margin-top: 10px;
@@ -161,8 +206,9 @@ th {
 }
 
 @media screen and (max-width: 500px) {
+  .adminPage{padding-top: 10%;}
   .tableCard {
-    min-width: 100%;
+    min-width: 90%;
     padding: 12px;
   }
 

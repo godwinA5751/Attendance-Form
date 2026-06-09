@@ -6,6 +6,8 @@ import { Printer, Download, RefreshCcw, LogOut, Trash2  } from "lucide-react";
 export default function AdminDashboard() {
   const [records, setRecords] = useState([]);
   const navigate = useNavigate();
+  const [activeBtn, setActiveBtn] = useState(null);
+  
   const API = import.meta.env.VITE_API_URL;
   
   const fetchRecords = async () => {
@@ -16,6 +18,14 @@ export default function AdminDashboard() {
     } catch (err) {
       console.log("Error fetching:", err);
     }
+  };
+
+  const triggerBounce = (btnName) => {
+    setActiveBtn(btnName);
+  
+    setTimeout(() => {
+      setActiveBtn(null);
+    }, 300);
   };
   
   useEffect(() => {
@@ -62,26 +72,63 @@ export default function AdminDashboard() {
         <h2>Attendance Records</h2>
 
         <div className="buttons">
-          <button className="refreshBtn" onClick={fetchRecords}>
-            <RefreshCcw size={18} />
+          <button
+            className="refreshBtn"
+            onClick={() => {
+              triggerBounce("refresh");
+              fetchRecords();
+            }}
+          >
+            <RefreshCcw
+              size={18}
+              className={activeBtn === "refresh" ? "rotate" : ""}
+            />
           </button>
-          <button className="refreshBtn" onClick={() => window.print()}>
-            <Printer size={18} />
-          </button> 
-          <button className="refreshBtn" onClick={exportCSV}>
-            <Download size={18} />
+          <button
+            className="refreshBtn"
+            onClick={() => {
+              triggerBounce("print");
+              setTimeout(() => {
+                    window.print();
+                  }, 300);
+            
+            }}
+          >
+            <Printer
+              size={18}
+              className={activeBtn === "print" ? "bounce" : ""}
+            />
           </button>
-          <button className="logoutBtn" onClick={clearAll}>
-            <Trash2 size={18} />
+          <button
+            className="refreshBtn"
+            onClick={() => {
+              triggerBounce("export");
+              exportCSV();
+            }}
+          >
+            <Download
+              size={18}
+              className={activeBtn === "export" ? "bounce" : ""}
+            />
+          </button>
+          <button className="logoutBtn"
+            onClick={() => {
+              triggerBounce("clear");
+              clearAll();
+            }}>
+            <Trash2 className={activeBtn === "clear" ? "bounce" : ""} size={18} />
           </button>
           <button
             className="logoutBtn"
             onClick={() => {
-              logoutAdmin();
-              navigate("/admin-login");
+              triggerBounce("logout")
+              setTimeout(() => {
+                logoutAdmin();
+                navigate("/admin-login")
+              }, 300);
             }}
           >
-            <LogOut size={18} />
+            <LogOut className={activeBtn === "logout" ? "slide" : ""} size={18} />
           </button>
         </div>
         {records.length === 0 ? (
