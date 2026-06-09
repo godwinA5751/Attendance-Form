@@ -9,19 +9,24 @@ const Attendance = require("./models/Attendance.js");
 const app = express();
 
 
+
+app.options("*", cors());
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://attendance-form-csc.vercel.app/"
+  "https://attendance-form-csc.vercel.app"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     } else {
-      callback(new Error("Not allowed by HACKIX"));
+      return callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
 app.use(express.json());
