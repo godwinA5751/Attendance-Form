@@ -13,7 +13,12 @@ export default function UserForm() {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+const idRegex = /^\d{2}\/\d{2}\/\d{2}\/\d{3,4}$/;
 
+if (!idRegex.test(form.id)) {
+  setMessage("❌ Invalid ID format");
+  return;
+}
   if (loading) return; // extra safety
 
   setLoading(true);
@@ -26,7 +31,9 @@ export default function UserForm() {
     });
 
     const data = await res.json();
-
+    if (!res.ok) {
+      setMessage("❌ " + data.message);
+    }
     if (res.ok) {
       setMessage("✅ " + data.message);
       setForm({ name: "", id: "" });
