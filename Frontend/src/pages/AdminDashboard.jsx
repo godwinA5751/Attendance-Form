@@ -84,29 +84,34 @@ export default function AdminDashboard() {
             <LogOut size={18} />
           </button>
         </div>
-        <div className="tableWrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>S/n</th>
-              <th>Name</th>
-              <th>ID</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {records.map((r, i) => (
-              <tr key={i}>
-                <td>{i + 1}</td> 
-                <td>{r.name}</td>
-                <td>{r.id}</td>
-                <td>{new Date(r.time).toLocaleString()}</td>
-              </tr>
-            ))}
-          </tbody>
-          </table>
-        </div>
+        {records.length === 0 ? (
+          <div className="emptyState">
+            No student record yet.
+          </div>
+        ) : (
+          <div className="tableWrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>S/n</th>
+                  <th>Name</th>
+                  <th>ID</th>
+                  <th>Time</th>
+                </tr>
+            </thead>
+              <tbody>
+                {records.map((r, i) => (
+                  <tr key={i}>
+                    <td>{i + 1}</td>
+                    <td>{r.name}</td>
+                    <td>{r.id}</td>
+                    <td>{new Date(r.time).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
