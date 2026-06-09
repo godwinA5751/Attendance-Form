@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setAdminAuth } from "../utils/auth";
-
+const adminPin = import.meta.env.VITE_ADMIN_SECRETPIN
 export default function AdminLogin() {
   const [adminKey, setAdminKey] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (adminKey === "12345") {
+    if (adminKey === adminPin) {
       setAdminAuth(true);
       navigate("/admin");
     } else {
