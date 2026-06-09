@@ -8,9 +8,6 @@ const Attendance = require("./models/Attendance.js");
 
 const app = express();
 
-
-
-app.options("*", cors());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://attendance-form-csc.vercel.app"
