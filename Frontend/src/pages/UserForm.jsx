@@ -4,7 +4,7 @@ import { useState } from "react";
 export default function UserForm() {
   const [form, setForm] = useState({ name: "", id: "" });
   const [message, setMessage] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const API = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
@@ -12,26 +12,34 @@ export default function UserForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+  e.preventDefault();
+
+  if (loading) return; // extra safety
+
+  setLoading(true);
+
+  try {
     const res = await fetch(`${API}/attendance`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
-  
+
     const data = await res.json();
-  
+
     if (res.ok) {
       setMessage("✅ " + data.message);
       setForm({ name: "", id: "" });
-      setTimeout(() => setMessage(""), 3000);
     } else {
       setMessage("❌ Error submitting");
     }
-  };
+  } catch (err) {
+    setMessage("❌ Network error", err);
+  } finally {
+    setLoading(false);
+    setTimeout(() => setMessage(""), 3000);
+  }
+};
 
   return (
     <div className="userPage">
@@ -55,7 +63,9 @@ export default function UserForm() {
             required
           />
 
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={loading}>
+             {loading ? "Submitting..." : "Submit"}
+          </button>
         </form>
 
         {message && <p className="msg">{message}</p>}
