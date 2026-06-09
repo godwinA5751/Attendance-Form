@@ -3,6 +3,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f4f6fb;
+  overflow-x: hidden;
 }
 
 /* CENTER USER PAGE */
@@ -17,15 +18,22 @@ body {
 /* ADMIN PAGE */
 .adminPage {
   width: 100%;
-  min-height: 100%;
-  padding: 40px;
+  min-height: 100vh;
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  background-color: black;
 }
 
 /* CARD BASE */
-.tableCard{width: 90%;}
+.tableWrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  scrollbar-width: thin;
+}
 .card,
 .tableCard {
   background: white;
@@ -52,6 +60,13 @@ input {
 
 input:focus {
   border-color: #4f46e5;
+}
+
+.buttons{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 /* BUTTONS */
@@ -84,12 +99,25 @@ button:hover {
   background: #15803d;
 }
 
+@media print {
+  button {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+
+  .tableCard {
+    box-shadow: none;
+  }
+}
+
 /* LOGOUT BUTTON */
 .logoutBtn {
   width: auto;
   padding: 8px 12px;
   margin-bottom: 10px;
-  margin-left: 5px;
   background: #dc2626;
 }
 
@@ -106,13 +134,13 @@ button:hover {
 
 /* TABLE */
 .tableCard {
-  min-width: 500px;
+  min-width: 70%;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  min-width: 600px;
 }
 
 th,
@@ -131,4 +159,16 @@ th {
   font-size: 12px;
   color: gray;
   margin-top: 10px;
+}
+
+@media screen and (max-width: 500px) {
+  .tableCard {
+    min-width: 100%;
+    padding: 12px;
+  }
+
+  th, td {
+    padding: 7px 1px;
+    font-size: 12px;
+  }
 }
