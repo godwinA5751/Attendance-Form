@@ -32,7 +32,7 @@ if (!idRegex.test(form.id)) {
 
     const data = await res.json();
     if (!res.ok) {
-      setMessage("❌ " + data.message);
+      return setMessage("❌ " + data.message);
     }
     if (res.ok) {
       setMessage("✅ " + data.message);
@@ -64,7 +64,7 @@ if (!idRegex.test(form.id)) {
 
           <input
             name="id"
-            placeholder="ID 23/08/08/0001"
+            placeholder="ID(eg:23/08/08/0001)"
             value={form.id}
             onChange={handleChange}
             required
