@@ -4,7 +4,7 @@ body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 /* CENTER USER PAGE */
@@ -28,11 +28,17 @@ body {
 
 /* CARD BASE */
 .tableWrapper {
-  width: 100%;
-  max-width: 100%;
+  flex: 1;
   overflow-x: auto;
-  display: block;
+  overflow-y: auto;
+  max-width: 100%;
   scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
+.tableCard{
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
 }
 .card,
 .tableCard {
@@ -195,7 +201,10 @@ td {
 }
 
 th {
+  position: sticky;
+  top: 0;
   background: #f1f1f1;
+  z-index: 2;
 }
 
 /* LOGIN SMALL TEXT */
