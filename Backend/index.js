@@ -37,14 +37,15 @@ app.post("/attendance", async (req, res) => {
   try {
     const { name, id } = req.body;
 
-    if (!name || !id) {
-      return res.status(400).json({ message: "Missing fields" });
+    const existing = await Attendance.findOne({ id });
+
+    if (existing) {
+      return res.status(400).json({
+        message: "ID already registered"
+      });
     }
 
-    const newRecord = await Attendance.create({
-      name,
-      id,
-    });
+    const newRecord = await Attendance.create({ name, id });
 
     res.status(201).json({
       message: "Attendance saved",
@@ -52,11 +53,9 @@ app.post("/attendance", async (req, res) => {
     });
 
   } catch (err) {
-    console.log("POST ERROR:", err); // IMPORTANT
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // GET all attendance (READ)
 app.get("/attendance", async (req, res) => {
