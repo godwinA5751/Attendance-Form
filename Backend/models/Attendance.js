@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const attendanceSchema = new mongoose.Schema({
   name: String,
-  id: String,
+   id: {
+    type: String,
+    required: true,
+    unique: true, // 🔥 prevents duplicates
+  },
   time: {
     type: Date,
     default: Date.now,
