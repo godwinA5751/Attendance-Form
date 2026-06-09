@@ -64,7 +64,7 @@ if (!idRegex.test(form.id)) {
 
           <input
             name="id"
-            placeholder="Enter ID"
+            placeholder="ID 23/08/08/0001"
             value={form.id}
             onChange={handleChange}
             required
