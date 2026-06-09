@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutAdmin } from "../utils/auth";
-import { Printer, Download, RefreshCcw, LogOut  } from "lucide-react";
+import { Printer, Download, RefreshCcw, LogOut, Trash2  } from "lucide-react";
 
 export default function AdminDashboard() {
   const [records, setRecords] = useState([]);
@@ -42,6 +42,19 @@ export default function AdminDashboard() {
     link.click();
   };
 
+  const clearAll = async () => {
+    const res = await fetch(`${API}/attendance`, {
+      method: "DELETE",
+    });
+  
+    const data = await res.json();
+  
+    if (res.ok) {
+      setRecords([]);
+      alert(data.message);
+    }
+  };
+
   return (
     <div className="adminPage">
 
@@ -57,6 +70,9 @@ export default function AdminDashboard() {
           </button> 
           <button className="refreshBtn" onClick={exportCSV}>
             <Download size={18} />
+          </button>
+          <button className="logoutBtn" onClick={clearAll}>
+            <Trash2 size={18} />
           </button>
           <button
             className="logoutBtn"

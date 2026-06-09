@@ -68,6 +68,15 @@ app.get("/attendance", async (req, res) => {
   }
 });
 
+app.delete("/attendance", async (req, res) => {
+  try {
+    await Attendance.deleteMany({});
+    res.json({ message: "All attendance records deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // start server
 const PORT = process.env.PORT || 5000;
