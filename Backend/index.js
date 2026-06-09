@@ -36,9 +36,15 @@ connectDB();
 app.post("/attendance", async (req, res) => {
   try {
     const { name, id } = req.body;
-
+    
+    const idRegex = /^\d{2}\/\d{2}\/\d{2}\/\d{3,4}$/;
+    if (!idRegex.test(id)) {
+      return res.status(400).json({
+        message: "Invalid ID format. Use format 00/00/00/000 or 00/00/00/0000"
+      });
+    }
+  
     const existing = await Attendance.findOne({ id });
-
     if (existing) {
       return res.status(400).json({
         message: "ID already registered"
