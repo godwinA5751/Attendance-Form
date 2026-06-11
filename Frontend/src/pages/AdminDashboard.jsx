@@ -1,25 +1,55 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutAdmin } from "../utils/auth";
-import { Printer, Download, RefreshCcw, LogOut, Trash2  } from "lucide-react";
+import { Printer, Download, RefreshCcw, LogOut, Trash2, Loader  } from "lucide-react";
 
 export default function AdminDashboard() {
   const [records, setRecords] = useState([]);
   const navigate = useNavigate();
   const [activeBtn, setActiveBtn] = useState(null);
+  const [loading, setLoading] = useState(false);
   
   const API = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const cachedRecord = localStorage.getItem("attendanceRecord");
+    if (cachedRecord) {
+      setTimeout(() => setRecords(JSON.parse(cachedRecord)), 0)
+    }
+  },[])
   
   const fetchRecords = async () => {
     try {
+      setLoading(true);
       const res = await fetch(`${API}/attendance`);
       const data = await res.json();
       setRecords(data);
+      localStorage.setItem("attendanceRecord", JSON.stringify(data));
     } catch (err) {
       console.log("Error fetching:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => fetchRecords(), 0);
+  }, []);
+  
+  const clearAll = async () => {
+    const res = await fetch(`${API}/attendance`, {
+      method: "DELETE",
+    });
+  
+    const data = await res.json();
+  
+    if (res.ok) {
+      setRecords([]);
+      localStorage.removeItem("attendanceRecord");
+      alert(data.message);
+    }
+  };
+  
   const triggerBounce = (btnName) => {
     setActiveBtn(btnName);
   
@@ -28,10 +58,6 @@ export default function AdminDashboard() {
     }, 300);
   };
   
-  useEffect(() => {
-    setTimeout(() => fetchRecords(), 2000);
-  }, []);
-
   const exportCSV = () => {
     const headers = ["S/n", "Name", "ID", "Time"];
   
@@ -50,19 +76,6 @@ export default function AdminDashboard() {
     link.setAttribute("download", "attendance.csv");
     document.body.appendChild(link);
     link.click();
-  };
-
-  const clearAll = async () => {
-    const res = await fetch(`${API}/attendance`, {
-      method: "DELETE",
-    });
-  
-    const data = await res.json();
-  
-    if (res.ok) {
-      setRecords([]);
-      alert(data.message);
-    }
   };
 
   return (
@@ -123,6 +136,7 @@ export default function AdminDashboard() {
             onClick={() => {
               triggerBounce("logout")
               setTimeout(() => {
+                localStorage.removeItem("attendanceRecord");
                 logoutAdmin();
                 navigate("/admin-login")
               }, 300);
@@ -131,11 +145,11 @@ export default function AdminDashboard() {
             <LogOut className={activeBtn === "logout" ? "slide" : ""} size={18} />
           </button>
         </div>
-        {records.length === 0 ? (
-          <div className="emptyState">
-            No student record yet.
-          </div>
-        ) : (
+        {loading ? (
+          <div ><Loader className="loader" size={24} /></div>
+        ) : records.length === 0 ?
+          <p>No records found.</p>
+          : (
           <div className="tableWrapper">
             <table>
               <thead>
