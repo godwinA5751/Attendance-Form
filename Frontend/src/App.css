@@ -2,7 +2,10 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f4f6fb;
+  background-image: url('./asset/background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   overflow-x: hidden;
   overflow: hidden;
 }
@@ -43,7 +46,9 @@ body {
 .card,
 .tableCard {
   width: 70%;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: midnightblue;
   padding: 22px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -109,16 +114,30 @@ button:hover {
 }
 
 @media print {
-  button {
-    display: none;
+  body {
+    overflow: visible !important;
+    background: white !important;
   }
 
-  body {
-    background: white;
+  .tableWrapper {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
   }
 
   .tableCard {
-    box-shadow: none;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  th{ 
+    color: royalblue !important; 
+    background: rgba(1, 2, 170) !important;
   }
 }
 
@@ -196,15 +215,18 @@ table {
 th,
 td {
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border: 1px solid rgba(41, 21, 240, 0.3);
   text-align: left;
+  color: royalblue;
 }
 
 th {
   position: sticky;
   top: 0;
-  background: #f1f1f1;
-  z-index: 2;
+  background: rgba(1, 2, 170);
+  color: white;
+  z-index: 1;
+  border: none;
 }
 
 /* LOGIN SMALL TEXT */
@@ -212,6 +234,12 @@ th {
   font-size: 12px;
   color: gray;
   margin-top: 10px;
+}
+
+@media screen and (max-width: 900px) {
+  body{
+    background-image: url('./asset/mobile.png');
+  }
 }
 
 @media screen and (max-width: 500px) {
