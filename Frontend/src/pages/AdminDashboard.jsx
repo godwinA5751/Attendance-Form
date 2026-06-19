@@ -8,21 +8,31 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [activeBtn, setActiveBtn] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState("attendance");
   
   const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const cachedRecord = localStorage.getItem("attendanceRecord");
-    if (cachedRecord) {
-      setTimeout(() => setRecords(JSON.parse(cachedRecord)), 0)
-    }
-  },[])
+    const key =
+      view === "attendance"
+        ? "attendanceRecord"
+        : "complainRecord";
   
-  const fetchRecords = async () => {
+    const cached = localStorage.getItem(key);
+  
+    if (cached) {
+      setTimeout(() => setRecords(JSON.parse(cached)), 0);
+    }
+  }, [view]);
+  
+  const fetchAttendance = async () => {
     try {
       setLoading(true);
+      setRecords([]);
+  
       const res = await fetch(`${API}/attendance`);
       const data = await res.json();
+  
       setRecords(data);
       localStorage.setItem("attendanceRecord", JSON.stringify(data));
     } catch (err) {
@@ -32,12 +42,39 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchComplain = async () => {
+    try {
+      setLoading(true);
+      setRecords([]); // clear attendance data
+  
+      const res = await fetch(`${API}/complain`);
+      const data = await res.json();
+  
+      setRecords(data);
+      localStorage.setItem("complainRecord", JSON.stringify(data));
+    } catch (err) {
+      console.log("Error fetching:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setTimeout(() => fetchRecords(), 0);
+    setTimeout(() => fetchAttendance(), 0);
   }, []);
   
   const clearAll = async () => {
-    const res = await fetch(`${API}/attendance`, {
+    const endpoint =
+      view === "attendance"
+        ? `${API}/attendance`
+        : `${API}/complain`;
+  
+    const cacheKey =
+      view === "attendance"
+        ? "attendanceRecord"
+        : "complainRecord";
+  
+    const res = await fetch(endpoint, {
       method: "DELETE",
     });
   
@@ -45,7 +82,7 @@ export default function AdminDashboard() {
   
     if (res.ok) {
       setRecords([]);
-      localStorage.removeItem("attendanceRecord");
+      localStorage.removeItem(cacheKey);
       alert(data.message);
     }
   };
@@ -89,7 +126,12 @@ export default function AdminDashboard() {
             className="refreshBtn"
             onClick={() => {
               triggerBounce("refresh");
-              fetchRecords();
+          
+              if (view === "attendance") {
+                fetchAttendance();
+              } else {
+                fetchComplain();
+              }
             }}
           >
             <RefreshCcw
@@ -145,6 +187,23 @@ export default function AdminDashboard() {
             <LogOut className={activeBtn === "logout" ? "slide" : ""} size={18} />
           </button>
         </div>
+        <select
+          value={view}
+          onChange={(e) => {
+            const value = e.target.value;
+        
+            setView(value);
+        
+            if (value === "attendance") {
+              fetchAttendance();
+            } else {
+              fetchComplain();
+            }
+          }}
+        >
+          <option value="attendance">Attendance</option>
+          <option value="complain">Complain</option>
+        </select>
         {loading ? (
           <div ><Loader className="loader" size={24} /></div>
         ) : records.length === 0 ?
@@ -157,6 +216,9 @@ export default function AdminDashboard() {
                   <th>S/n</th>
                   <th>Name</th>
                   <th>ID</th>
+                  {view === "complain" && (
+                    <th>Complaint</th>
+                  )}
                   <th>Time</th>
                 </tr>
             </thead>
@@ -166,6 +228,9 @@ export default function AdminDashboard() {
                     <td>{i + 1}</td>
                     <td>{r.name}</td>
                     <td>{r.id}</td>
+                    {view === "complain" && (
+                      <td>{r.complaint}</td>
+                    )}
                     <td>{new Date(r.time).toLocaleString()}</td>
                   </tr>
                 ))}

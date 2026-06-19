@@ -74,13 +74,6 @@ app.post("/complain", async (req, res) => {
         message: "Invalid ID format. Use format 00/00/00/000 or 00/00/00/0000"
       });
     }
-  
-    const existing = await Complain.findOne({ id });
-    if (existing) {
-      return res.status(400).json({
-        message: "User already complained"
-      });
-    }
     
     const newRecord = await Complain.create({ name, id, complaint });
 
