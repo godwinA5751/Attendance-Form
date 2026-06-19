@@ -142,7 +142,9 @@ export default function AdminDashboard() {
   return (
     <div className="adminPage">
       <div className="tableCard">
-        <h2>Attendance Records</h2>
+        <h2>
+          {view === "attendance" ? "Attendance Records" : "Complain Records"}
+        </h2>
 
         <div className="functions">
           <div className="buttons">
