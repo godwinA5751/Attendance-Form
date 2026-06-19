@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutAdmin } from "../utils/auth";
-import { Printer, Download, RefreshCcw, LogOut, Trash2, Loader  } from "lucide-react";
+import { Printer, Download, RefreshCcw, LogOut, Trash2, Loader } from "lucide-react";
 
 export default function AdminDashboard() {
   const [records, setRecords] = useState([]);
@@ -96,114 +96,139 @@ export default function AdminDashboard() {
   };
   
   const exportCSV = () => {
-    const headers = ["S/n", "Name", "ID", "Time"];
+    const headers =
+      view === "attendance"
+        ? ["S/n", "Name", "ID", "Time"]
+        : ["S/n", "Name", "ID", "Complain", "Time"];
   
     const rows = records.map((r, i) =>
-      [i+1, r.name, r.id, new Date(r.time).toLocaleString()]
+      view === "attendance"
+        ? [
+            i + 1,
+            r.name,
+            r.id,
+            new Date(r.time).toLocaleString(),
+          ]
+        : [
+            i + 1,
+            r.name,
+            r.id,
+            `"${r.complain}"`,
+            new Date(r.time).toLocaleString(),
+          ]
     );
   
-    let csvContent =
+    const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers, ...rows].map(e => e.join(",")).join("\n");
+      [headers, ...rows].map((e) => e.join(",")).join("\n");
   
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
   
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "attendance.csv");
+  
+    link.setAttribute(
+      "download",
+      view === "attendance"
+        ? "attendance.csv"
+        : "complains.csv"
+    );
+  
     document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <div className="adminPage">
-
       <div className="tableCard">
         <h2>Attendance Records</h2>
 
-        <div className="buttons">
-          <button
-            className="refreshBtn"
-            onClick={() => {
-              triggerBounce("refresh");
+        <div className="functions">
+          <div className="buttons">
+            <button
+              className="refreshBtn"
+              onClick={() => {
+                triggerBounce("refresh");
+            
+                if (view === "attendance") {
+                  fetchAttendance();
+                } else {
+                  fetchComplain();
+                }
+              }}
+            >
+              <RefreshCcw
+                size={18}
+                className={activeBtn === "refresh" ? "rotate" : ""}
+              />
+            </button>
+            <button
+              className="refreshBtn"
+              onClick={() => {
+                triggerBounce("print");
+                setTimeout(() => {
+                      window.print();
+                    }, 300);
+              
+              }}
+            >
+              <Printer
+                size={18}
+                className={activeBtn === "print" ? "bounce" : ""}
+              />
+            </button>
+            <button
+              className="refreshBtn"
+              onClick={() => {
+                triggerBounce("export");
+                exportCSV();
+              }}
+            >
+              <Download
+                size={18}
+                className={activeBtn === "export" ? "bounce" : ""}
+              />
+            </button>
+            <button className="logoutBtn"
+              onClick={() => {
+                triggerBounce("clear");
+                clearAll();
+              }}>
+              <Trash2 className={activeBtn === "clear" ? "bounce" : ""} size={18} />
+            </button>
+            <button
+              className="logoutBtn"
+              onClick={() => {
+                triggerBounce("logout")
+                setTimeout(() => {
+                  localStorage.removeItem("attendanceRecord");
+                  logoutAdmin();
+                  navigate("/admin-login")
+                }, 300);
+              }}
+            >
+              <LogOut className={activeBtn === "logout" ? "slide" : ""} size={18} />
+            </button>
+          </div>
+          <select
+            value={view}
+            onChange={(e) => {
+              const value = e.target.value;
           
-              if (view === "attendance") {
+              setView(value);
+          
+              if (value === "attendance") {
                 fetchAttendance();
               } else {
                 fetchComplain();
               }
             }}
           >
-            <RefreshCcw
-              size={18}
-              className={activeBtn === "refresh" ? "rotate" : ""}
-            />
-          </button>
-          <button
-            className="refreshBtn"
-            onClick={() => {
-              triggerBounce("print");
-              setTimeout(() => {
-                    window.print();
-                  }, 300);
-            
-            }}
-          >
-            <Printer
-              size={18}
-              className={activeBtn === "print" ? "bounce" : ""}
-            />
-          </button>
-          <button
-            className="refreshBtn"
-            onClick={() => {
-              triggerBounce("export");
-              exportCSV();
-            }}
-          >
-            <Download
-              size={18}
-              className={activeBtn === "export" ? "bounce" : ""}
-            />
-          </button>
-          <button className="logoutBtn"
-            onClick={() => {
-              triggerBounce("clear");
-              clearAll();
-            }}>
-            <Trash2 className={activeBtn === "clear" ? "bounce" : ""} size={18} />
-          </button>
-          <button
-            className="logoutBtn"
-            onClick={() => {
-              triggerBounce("logout")
-              setTimeout(() => {
-                localStorage.removeItem("attendanceRecord");
-                logoutAdmin();
-                navigate("/admin-login")
-              }, 300);
-            }}
-          >
-            <LogOut className={activeBtn === "logout" ? "slide" : ""} size={18} />
-          </button>
+            <option value="attendance">Attendance</option>
+            <option value="complain">Complain</option>
+          </select>
         </div>
-        <select
-          value={view}
-          onChange={(e) => {
-            const value = e.target.value;
-        
-            setView(value);
-        
-            if (value === "attendance") {
-              fetchAttendance();
-            } else {
-              fetchComplain();
-            }
-          }}
-        >
-          <option value="attendance">Attendance</option>
-          <option value="complain">Complain</option>
-        </select>
         {loading ? (
           <div ><Loader className="loader" size={24} /></div>
         ) : records.length === 0 ?
@@ -217,7 +242,7 @@ export default function AdminDashboard() {
                   <th>Name</th>
                   <th>ID</th>
                   {view === "complain" && (
-                    <th>Complaint</th>
+                    <th>Complain</th>
                   )}
                   <th>Time</th>
                 </tr>
@@ -229,7 +254,7 @@ export default function AdminDashboard() {
                     <td>{r.name}</td>
                     <td>{r.id}</td>
                     {view === "complain" && (
-                      <td>{r.complaint}</td>
+                      <td>{r.complain}</td>
                     )}
                     <td>{new Date(r.time).toLocaleString()}</td>
                   </tr>

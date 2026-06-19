@@ -14,12 +14,18 @@ body {
   background-image: url('./asset/complain_bg.png');
 }
 
-/* CENTER USER PAGE */
+.userPage, .adminPage {
+  background-image: url('./asset/landing_bg.png');
+}
+
+.adminPage {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .userPage, .attendance, .complain {
   min-height: 100vh;
-  /*display: flex;
-  align-items: center;
-  justify-content: center;*/
   padding: 20px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -64,7 +70,7 @@ body {
 .card,
 .tableCard {
   width: 70%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
   color: midnightblue;
   padding: 22px;
@@ -103,6 +109,25 @@ input:focus, textarea:focus {
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
+}
+
+.functions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.functions select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: 0.2s;
+}
+
+.functions select:hover {
+  box-shadow: 0 4px 10px #a6b8e5;
+  border-color: #a6b8e5;
 }
 
 /* BUTTONS */
@@ -153,7 +178,7 @@ button:hover {
     box-shadow: none !important;
   }
 
-  button {
+  button, select {
     display: none !important;
   }
 
@@ -245,7 +270,7 @@ td {
   padding: 10px;
   border: 1px solid rgba(41, 21, 240, 0.3);
   text-align: left;
-  color: royalblue;
+  color: midnightblue;
 }
 
 th {
@@ -265,6 +290,10 @@ th {
 }
 
 @media screen and (max-width: 900px) {
+  .userPage, .adminPage {
+    background-image: url('./asset/landing_mobile.png');
+  }
+  
   .attendance{
     background-image: url('./asset/mobile.png');
   }
@@ -284,5 +313,9 @@ th {
   th, td {
     padding: 7px 1px;
     font-size: 12px;
+  }
+
+  .buttons{
+    gap: 7px;
   }
 }
