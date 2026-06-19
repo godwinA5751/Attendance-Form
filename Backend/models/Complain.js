@@ -7,7 +7,7 @@ const complainSchema = new mongoose.Schema({
     required: true,
     unique: true, // 🔥 prevents duplicates
   },
-  complaint: String,
+  complain: String,
   time: {
     type: Date,
     default: Date.now,

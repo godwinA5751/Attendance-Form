@@ -26,7 +26,7 @@ export default function UserForm() {
     setLoading(true);
   
     try {
-      const res = await fetch(`${API}/complaint`, {
+      const res = await fetch(`${API}/complain`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

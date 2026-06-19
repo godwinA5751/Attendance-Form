@@ -66,7 +66,7 @@ app.post("/attendance", async (req, res) => {
 
 app.post("/complain", async (req, res) => {
   try {
-    const { name, id, complaint } = req.body;
+    const { name, id, complain } = req.body;
 
     const idRegex = /^\d{2}\/\d{2}\/\d{2}\/\d{3,4}$/;
     if (!idRegex.test(id)) {
@@ -75,7 +75,7 @@ app.post("/complain", async (req, res) => {
       });
     }
     
-    const newRecord = await Complain.create({ name, id, complaint });
+    const newRecord = await Complain.create({ name, id, complain });
 
     res.status(201).json({
       message: "Complaint saved",
