@@ -4,6 +4,7 @@ dotenv.config();
 const cors = require("cors");
 const { connectDB } = require("./config/db.js");
 const Attendance = require("./models/Attendance.js");
+const Complain = require("./models/Complain.js");
 
 
 const app = express();
@@ -63,10 +64,49 @@ app.post("/attendance", async (req, res) => {
   }
 });
 
+app.post("/complain", async (req, res) => {
+  try {
+    const { name, id, complaint } = req.body;
+
+    const idRegex = /^\d{2}\/\d{2}\/\d{2}\/\d{3,4}$/;
+    if (!idRegex.test(id)) {
+      return res.status(400).json({
+        message: "Invalid ID format. Use format 00/00/00/000 or 00/00/00/0000"
+      });
+    }
+  
+    const existing = await Complain.findOne({ id });
+    if (existing) {
+      return res.status(400).json({
+        message: "User already complained"
+      });
+    }
+    
+    const newRecord = await Complain.create({ name, id, complaint });
+
+    res.status(201).json({
+      message: "Complaint saved",
+      data: newRecord,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // GET all attendance (READ)
 app.get("/attendance", async (req, res) => {
   try {
     const records = await Attendance.find().sort({ time: -1 });
+    res.json(records);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.get("/complain", async (req, res) => {
+  try {
+    const records = await Complain.find().sort({ time: -1 });
     res.json(records);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -82,6 +122,14 @@ app.delete("/attendance", async (req, res) => {
   }
 });
 
+app.delete("/complain", async (req, res) => {
+  try {
+    await Complain.deleteMany({});
+    res.json({ message: "All complain records deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // start server
 const PORT = process.env.PORT || 5000;

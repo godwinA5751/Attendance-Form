@@ -2,21 +2,39 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-image: url('./asset/background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   overflow-x: hidden;
   overflow: hidden;
 }
 
+.attendance{
+  background-image: url('./asset/background.png');
+}
+
+.complain{
+  background-image: url('./asset/complain_bg.png');
+}
+
 /* CENTER USER PAGE */
-.userPage {
+.userPage, .attendance, .complain {
   min-height: 100vh;
-  display: flex;
+  /*display: flex;
+  align-items: center;
+  justify-content: center;*/
+  padding: 20px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.back-btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: midnightblue;
+  padding: 10px;
+  cursor: pointer;
 }
 
 /* ADMIN PAGE */
@@ -57,10 +75,14 @@ body {
 /* USER CARD */
 .card {
   width: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* INPUTS */
-input {
+input, textarea {
   width: 100%;
   margin: 8px 0;
   padding: 10px;
@@ -71,7 +93,7 @@ input {
   transition: 0.2s;
 }
 
-input:focus {
+input:focus, textarea:focus {
   box-shadow: 0 4px 10px #a6b8e5;
   border-color: #a6b8e5;
 }
@@ -87,7 +109,7 @@ input:focus {
 button {
   width: 100%;
   padding: 10px;
-  background: #4f46e5;
+  background: #4f70e5;
   color: white;
   border: none;
   border-radius: 8px;
@@ -98,7 +120,7 @@ button {
 }
 
 button:hover {
-  background: #4338ca;
+  background: #4358ca;
 }
 
 /* SECONDARY BUTTON (refresh, logout etc) */
@@ -193,6 +215,13 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
+.home-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 /* MESSAGE */
 .msg {
   margin-top: 10px;
@@ -236,8 +265,12 @@ th {
 }
 
 @media screen and (max-width: 900px) {
-  body{
+  .attendance{
     background-image: url('./asset/mobile.png');
+  }
+
+  .complain{
+    background-image: url('./asset/complain_mobile.png');
   }
 }
 
