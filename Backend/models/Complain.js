@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const complainSchema = new mongoose.Schema({
   name: {
-    String,
+    type: String,
     required: true,
   },
   id: {
@@ -10,7 +10,7 @@ const complainSchema = new mongoose.Schema({
     required: true,
   },
   complain: {
-    String,
+    type: String,
     required: true,
   },
   time: {
