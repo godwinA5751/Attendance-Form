@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
 
 const complainSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    String,
+    required: true,
+  },
   id: {
     type: String,
     required: true,
-    unique: true, // 🔥 prevents duplicates
   },
-  complain: String,
+  complain: {
+    String,
+    required: true,
+  },
   time: {
     type: Date,
     default: Date.now,
